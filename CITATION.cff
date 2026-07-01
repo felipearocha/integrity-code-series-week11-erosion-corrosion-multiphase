@@ -42,3 +42,13 @@ keywords:
 license: MIT
 version: "1.0.0"
 date-released: "2026-07-01"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.21114866"
+    description: "Concept DOI (always resolves to latest version)"
+  - type: doi
+    value: "10.5281/zenodo.21114867"
+    description: "Version DOI (pinned to v1.0.0)"
+  - type: url
+    value: "https://github.com/felipearocha/integrity-code-series-week11-erosion-corrosion-multiphase/releases/tag/v1.0.0"
+    description: "GitHub release tag v1.0.0"
