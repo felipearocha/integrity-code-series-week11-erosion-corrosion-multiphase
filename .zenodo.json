@@ -1,0 +1,52 @@
+{
+  "title": "Integrity Code Series - Week 11 - Coupled Erosion-Corrosion in Multiphase Piping at Bends",
+  "description": "<p>Coupled erosion-corrosion simulation of sand-laden CO2 multiphase production piping at 90-degree elbows. The package resolves the hydrodynamics and runs the codified erosion and corrosion models together:</p><ul><li>DNV-RP-O501 Rev.4.2 ductile particle-erosion bend model (designated by NORSOK P-002 Clause 8.6.4), with the Table 7-1 F(alpha) angle function verified by hand-calc</li><li>NORSOK M-506:2017 (Rev.3) CO2 corrosion: 9-node Kt table, wall-shear-stress term, CO2 fugacity coefficient, Table 2 pH factors</li><li>Beggs-Brill (1973) multiphase flow-regime classification and liquid holdup</li><li>NORSOK Eq.21-22 wall shear and Berger-Hau mass transfer</li><li>ASTM G119 erosion-corrosion synergy decomposition driven by protective-FeCO3-scale removal (heuristic split, tagged T3)</li><li>Wall-loss field over the elbow surface, clamped to the pipe wall with time-to-perforation</li><li>API 579-1 Part 5 remaining strength factor with the Folias bulging factor Mt, plus remaining life</li><li>12,000-run Monte Carlo and a gradient-boosted surrogate; sensitivity ranks pH, temperature and CO2 as the dominant drivers</li></ul><p>Outputs are SHA-256 hash-chained for audit traceability. The package ships 466 unit and integration tests and a QC gate of 14 analytical hand-calc benchmarks. Honest scope: under the sampled envelope wall loss is CO2-corrosion-dominated (sand erosion ~2% of the median total, erosion-corrosion synergy ~15%); the elbow angular shear profile is a prescribed shape fitted to El-Gammal (2010) / Kim (2021) peak locations, not a resolved CFD field; Beggs-Brill holdup and Berger-Hau mass transfer are diagnostics.</p>",
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "MIT",
+  "creators": [
+    {
+      "name": "Rocha, Felipe",
+      "affiliation": "Independent Researcher, Calgary, Canada"
+    }
+  ],
+  "keywords": [
+    "erosion-corrosion",
+    "multiphase flow",
+    "CO2 corrosion",
+    "sand erosion",
+    "pipeline integrity",
+    "NORSOK M-506",
+    "DNV-RP-O501",
+    "Beggs-Brill",
+    "ASTM G119",
+    "API 579",
+    "fitness-for-service",
+    "Monte Carlo",
+    "fracture mechanics",
+    "asset integrity"
+  ],
+  "related_identifiers": [
+    {
+      "relation": "isSupplementTo",
+      "identifier": "https://github.com/felipearocha/integrity-code-series-week11-erosion-corrosion-multiphase",
+      "scheme": "url",
+      "resource_type": "software"
+    }
+  ],
+  "references": [
+    "DNV (2007). DNV-RP-O501 Erosive Wear in Piping Systems, Rev.4.2.",
+    "Standards Norway (2017). NORSOK M-506 CO2 corrosion rate calculation model, Rev.3.",
+    "Standards Norway. NORSOK P-002 Process system design.",
+    "Beggs H.D., Brill J.P. (1973). A Study of Two-Phase Flow in Inclined Pipes. JPT: 607-617, SPE-4007-PA.",
+    "Berger F.P., Hau K.-F.F.-L. (1977). Mass transfer in turbulent pipe flow measured by the electrochemical method. Int. J. Heat Mass Transfer 20: 1185-1194.",
+    "ASTM G119 Standard Guide for Determining Synergism Between Wear and Corrosion.",
+    "API (2016). API 579-1/ASME FFS-1 Fitness-for-Service, Part 5.",
+    "API RP 571 Damage Mechanisms Affecting Fixed Equipment in the Refining Industry, Sec. 3.27.",
+    "El-Gammal M. et al. (2010). The hydrodynamic effects of single-phase flow on flow accelerated corrosion in a 90-degree elbow. Nuclear Engineering and Design 240: 1589-1598.",
+    "Kim J. et al. (2021). Flow-accelerated corrosion of elbow pipes. Nuclear Engineering and Technology 53: 3003-3011.",
+    "Madani Sani F. et al. (2019). A critical review of the API RP 14E erosional velocity. Wear 426-427."
+  ],
+  "language": "eng",
+  "version": "1.0.0"
+}

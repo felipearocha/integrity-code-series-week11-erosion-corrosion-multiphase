@@ -86,7 +86,7 @@ API 579-1 Part 5 RSF + remaining life
 python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 python run_all.py                 # benchmarks + dataset + all visuals
-python validation/benchmarks.py   # QC Gate 1 (11 hand-calcs)
+python validation/benchmarks.py   # QC Gate 1 (14 hand-calcs)
 python -m pytest tests/ -q        # 466 tests
 ```
 
@@ -108,7 +108,7 @@ src/
   cybersecurity.py      audit chain + sensor validation + fingerprint
 validation/benchmarks.py   QC Gate 1 analytical hand-calcs
 viz/                    plot_hero.py, plot_secondary.py, plot_gif.py
-tests/                  460 tests across 11 modules
+tests/                  466 tests across 12 modules
 assets/                 hero, 6 secondary PNGs, GIF, dataset, surrogate metrics
 linkedin/post_draft.txt
 ```
@@ -146,6 +146,15 @@ Every equation and constant carries an explicit `[SOURCE: ...]` tag with tier
 (T1 standard/paper, T2 derived, T3 practitioner). The NORSOK M-506 model was
 transcribed from the controlled 2017 (Rev.3) copy - not the older Rev.1 widely
 posted online, which lacks the 5 C / 15 C nodes and the pH2S applicability limit.
+
+The tiers are applied honestly. Where a coupling term is a modelling assumption
+rather than a standard value it is tagged **T3** and called out in the
+"Model-fidelity notes" section above - specifically the ASTM G119 synergy split
+coefficients, the bare-steel-corrosion proxy, and the prescribed elbow shear
+profile (whose peak locations are fitted to El-Gammal/Kim, not resolved by CFD).
+The T1 constants that ARE read directly from a controlled copy - the NORSOK Kt
+9-node table, the DNV `F(alpha)` polynomial, and the Beggs-Brill holdup
+coefficients - are each verified against their source by a QC Gate hand-calc.
 
 ## License
 
