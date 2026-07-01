@@ -1,0 +1,44 @@
+cff-version: 1.2.0
+title: "Integrity Code Series - Week 11 - Coupled Erosion-Corrosion in Multiphase Piping at Bends"
+message: "If you use this software, please cite it using the metadata below."
+type: software
+authors:
+  - family-names: Rocha
+    given-names: Felipe
+    affiliation: "Independent Researcher, Calgary, Canada"
+    email: "felipe@olivainternationaltech.com"
+    # orcid: "https://orcid.org/0000-0000-0000-0000"  # TODO: replace once ORCID is provisioned
+repository-code: "https://github.com/felipearocha/integrity-code-series-week11-erosion-corrosion-multiphase"
+url: "https://github.com/felipearocha/integrity-code-series-week11-erosion-corrosion-multiphase"
+abstract: >
+  Coupled erosion-corrosion simulation of sand-laden CO2 multiphase production
+  piping at 90-degree elbows. Combines the DNV-RP-O501 Rev.4.2 particle-erosion
+  bend model (designated by NORSOK P-002), the NORSOK M-506:2017 CO2 corrosion
+  model (9-node Kt table, wall-shear term, fugacity coefficient), Beggs-Brill
+  (1973) multiphase flow-regime classification, an ASTM G119 erosion-corrosion
+  synergy decomposition driven by protective-scale removal, a wall-loss field
+  over the elbow surface clamped to the pipe wall with time-to-perforation, and
+  an API 579-1 Part 5 remaining strength factor including the Folias bulging
+  factor. A 12,000-run Monte Carlo trains a gradient-boosted surrogate and ranks
+  the dominant drivers, with a SHA-256 hash-chained audit log. Under the sampled
+  envelope the wall loss is CO2-corrosion-dominated; the elbow angular shear
+  profile is a prescribed shape fitted to El-Gammal (2010) / Kim (2021) peak
+  locations rather than a resolved CFD field.
+keywords:
+  - erosion-corrosion
+  - multiphase flow
+  - CO2 corrosion
+  - sand erosion
+  - pipeline integrity
+  - NORSOK M-506
+  - DNV-RP-O501
+  - Beggs-Brill
+  - ASTM G119
+  - API 579
+  - fitness-for-service
+  - Monte Carlo
+  - fracture mechanics
+  - asset integrity
+license: MIT
+version: "1.0.0"
+date-released: "2026-07-01"
