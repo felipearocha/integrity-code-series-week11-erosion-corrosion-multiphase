@@ -2,9 +2,11 @@
 
 ## Coupled Erosion-Corrosion in Multiphase Oil & Gas Production Piping at Bends
 
-[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
+[![CI](https://github.com/felipearocha/integrity-code-series-week11-erosion-corrosion-multiphase/actions/workflows/ci.yml/badge.svg)](https://github.com/felipearocha/integrity-code-series-week11-erosion-corrosion-multiphase/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Tests: 466](https://img.shields.io/badge/tests-466%20passing-brightgreen.svg)]()
+[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
+[![Tests: 466 passing](https://img.shields.io/badge/tests-466%20passing-brightgreen.svg)](tests)
+[![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21114866.svg)](https://doi.org/10.5281/zenodo.21114866)
 
 ---
@@ -58,7 +60,10 @@ API 579-1 Part 5 RSF + remaining life
         +--> SHA-256 audit chain + sensor validation
 ```
 
-## Governing Models (every constant tagged to source)
+## Governing Equations
+
+Every constant is tagged to its source standard or paper. Full rendered (MathJax)
+reference: **[docs/equations.html](docs/equations.html)** — open in any browser.
 
 ### Erosion - DNV-RP-O501 Rev.4.2 (designated by NORSOK P-002 Clause 8.6.4)
 - Bend rate (Eq.8.15-8.21): characteristic angle `alpha = atan(1/(2*sqrt(R/D)))`,
@@ -111,7 +116,7 @@ validation/benchmarks.py   QC Gate 1 analytical hand-calcs
 viz/                    plot_hero.py, plot_secondary.py, plot_gif.py
 tests/                  466 tests across 12 modules
 assets/                 hero, 6 secondary PNGs, GIF, dataset, surrogate metrics
-linkedin/post_draft.txt
+docs/equations.html     rendered (MathJax) governing-equations reference
 ```
 
 ## Key Result
@@ -141,6 +146,19 @@ are near zero. "Erosion-corrosion" is the standard damage-mechanism name
 - `ffs_api579.rsf_part5()` implements the true Part-5 Level-1 RSF with the Folias
   bulging factor Mt; `remaining_strength_factor()` is a depth-only screening proxy.
 
+## Escalation Table
+
+| Week | Topic | Key escalation |
+|------|-------|---------------|
+| 9 | CUI | 3 coupled PDEs, Strang splitting |
+| 10 | NNpHSCC | Chen-Sutherby-Xing crack growth, crack colony, COV=61.2% epistemic |
+| **11** | **Erosion-corrosion** | **Coupled DNV erosion + NORSOK CO2 + Beggs-Brill flow + G119 synergy + API 579 Part 5 FFS** |
+
+## Cybersecurity (STRIDE)
+
+SHA-256 hash-chain audit for all runs; sensor-envelope validation; coefficient
+fingerprint; surrogate out-of-distribution fallback. See `src/cybersecurity.py`.
+
 ## Anti-Hallucination Note
 
 Every equation and constant carries an explicit `[SOURCE: ...]` tag with tier
@@ -157,6 +175,53 @@ The T1 constants that ARE read directly from a controlled copy - the NORSOK Kt
 9-node table, the DNV `F(alpha)` polynomial, and the Beggs-Brill holdup
 coefficients - are each verified against their source by a QC Gate hand-calc.
 
+## Disclaimer
+
+Research tool only. Not for design, fitness-for-service, or safety-critical
+decisions without site-specific calibration and independent PE review.
+
 ## License
 
-MIT - Felipe Rocha
+MIT - Felipe Rocha. See [LICENSE](LICENSE).
+
+## How to Cite
+
+If this software contributes to your work, please cite the archived release:
+
+> Rocha, F. (2026). *Integrity Code Series — Week 11 — Coupled Erosion-Corrosion in Multiphase Piping at Bends* (Version 1.0.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.21114866
+
+**BibTeX:**
+
+```bibtex
+@software{rocha_2026_erosion_corrosion,
+  author    = {Rocha, Felipe},
+  title     = {{Integrity Code Series --- Week 11 --- Coupled
+               Erosion-Corrosion in Multiphase Piping at Bends}},
+  year      = 2026,
+  publisher = {Zenodo},
+  version   = {v1.0.0},
+  doi       = {10.5281/zenodo.21114866},
+  url       = {https://doi.org/10.5281/zenodo.21114866}
+}
+```
+
+| DOI | Points to |
+|-----|-----------|
+| [`10.5281/zenodo.21114866`](https://doi.org/10.5281/zenodo.21114866) (concept) | Always resolves to the latest version — use for citation. |
+| [`10.5281/zenodo.21114867`](https://doi.org/10.5281/zenodo.21114867) (version) | Pinned to v1.0.0 — use when reproducibility matters. |
+
+A machine-readable [`CITATION.cff`](CITATION.cff) drives GitHub's "Cite this repository" widget.
+
+## Integrity Code Series
+
+Part of an ongoing series of physics-first integrity simulators by Felipe Rocha:
+
+| # | Repo | Domain |
+|---|---|---|
+| Week 3 | [Integrity-code-series-3](https://github.com/felipearocha/Integrity-code-series-3) | F1 lap simulation (six coupled ODEs) |
+| Week 6 | [integrity-code-series-week6-smartphone-galvanic](https://github.com/felipearocha/Integrity-code-series-week6-smartphone-galvanic) | Smartphone galvanic corrosion (Laplace + Butler-Volmer) |
+| Week 7 | [integrity_code_series_week7_h2_lferw](https://github.com/felipearocha/integrity_code_series_week7_h2_lferw) | LF-ERW H2 conversion (B31.12 + NACE TM0316) |
+| Week 8 | [integrity-code-series-week8-creep-fatigue-heater](https://github.com/felipearocha/integrity-code-series-week8-creep-fatigue-heater) | Creep-fatigue 9Cr-1Mo (Norton/Omega + Coffin-Manson) |
+| Week 9 | [integrity-code-series-week9-cui](https://github.com/felipearocha/integrity-code-series-week9-cui) | CUI thermohygro-electrochemical (3 PDEs, Strang) |
+| Week 10 | [integrity-code-series-week-10_nnph_scc](https://github.com/felipearocha/integrity-code-series-week-10_nnph_scc) | NNpHSCC full-physics (Chen-Sutherby-Xing + BS 7910) |
+| **Week 11** | **[integrity-code-series-week11-erosion-corrosion-multiphase](https://github.com/felipearocha/integrity-code-series-week11-erosion-corrosion-multiphase)** | **Erosion-corrosion multiphase (NORSOK M-506 + DNV-RP-O501 + G119 + API 579) — this repo** |
