@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Integrity Code Series — Week 11 — Governing Equations</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams'
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    :root {
+      --navy: #1b3a5c;
+      --steel: #4c80b0;
+      --red: #8c2318;
+      --teal: #2e7d7b;
+      --charcoal: #333333;
+      --gold: #8B6914;
+      --bg: #fbfbfb;
+      --card: #ffffff;
+      --border: #e2e6ec;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 32px 24px 96px 24px;
+      color: var(--charcoal);
+      background: var(--bg);
+      line-height: 1.55;
+    }
+    header {
+      border-bottom: 2px solid var(--navy);
+      padding-bottom: 18px;
+      margin-bottom: 26px;
+    }
+    h1 { color: var(--navy); font-size: 26px; margin: 0 0 6px 0; }
+    .subtitle { color: var(--steel); font-size: 14px; margin: 0; }
+    h2 {
+      color: var(--navy);
+      border-left: 4px solid var(--teal);
+      padding-left: 12px;
+      margin-top: 38px;
+      font-size: 19px;
+    }
+    h3 { color: var(--charcoal); margin-top: 26px; margin-bottom: 6px; font-size: 15px; font-weight: 700; }
+    .eq-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 16px 20px;
+      margin: 12px 0 18px 0;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+    .src { font-size: 12px; color: var(--gold); font-style: italic; margin: 6px 0 10px 0; }
+    .code-ref {
+      font-family: "SF Mono", "Consolas", "Menlo", monospace;
+      font-size: 11.5px;
+      color: var(--steel);
+      background: #f1f4f7;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+    .toc {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px 20px;
+      margin-bottom: 30px;
+    }
+    .toc ol { margin: 4px 0 0 0; padding-left: 22px; }
+    .toc a { color: var(--navy); text-decoration: none; }
+    .toc a:hover { text-decoration: underline; color: var(--red); }
+    .note {
+      background: #fff8e6;
+      border-left: 3px solid var(--gold);
+      padding: 10px 14px;
+      margin: 14px 0;
+      font-size: 13px;
+      color: #5b4a1d;
+    }
+    .disclaimer {
+      margin-top: 50px;
+      padding: 16px 20px;
+      background: #fef0ee;
+      border-left: 3px solid var(--red);
+      font-size: 13px;
+      color: #6b2418;
+    }
+    footer {
+      margin-top: 36px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: #888;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Integrity Code Series — Week 11</h1>
+  <p class="subtitle">Coupled Erosion-Corrosion in Multiphase Piping at Bends — Governing Equations Reference</p>
+  <p class="subtitle"><strong>Felipe Rocha</strong></p>
+</header>
+
+<div class="toc">
+  <strong>Contents</strong>
+  <ol>
+    <li><a href="#flow">Multiphase Flow (Beggs-Brill)</a></li>
+    <li><a href="#hydro">Hydrodynamics — Wall Shear &amp; Mass Transfer</a></li>
+    <li><a href="#erosion">Sand Erosion (DNV-RP-O501)</a></li>
+    <li><a href="#corrosion">CO₂ Corrosion (NORSOK M-506:2017)</a></li>
+    <li><a href="#synergy">Erosion-Corrosion Synergy (ASTM G119)</a></li>
+    <li><a href="#field">Wall-Loss Field &amp; Time-to-Perforation</a></li>
+    <li><a href="#ffs">Fitness-for-Service (API 579-1 Part 5)</a></li>
+  </ol>
+</div>
+
+<!-- ─────────────────────────────────────────────────────────── -->
+<h2 id="flow">1. Multiphase Flow — Beggs-Brill (1973)</h2>
+
+<h3>1.1 No-slip holdup and Froude number</h3>
+<div class="eq-card">
+$$
+\lambda_L \;=\; \frac{q_L}{q_L + q_g},
+\qquad
+\mathrm{Fr} \;=\; \frac{u_m^{2}}{g\,D},
+\qquad
+u_m \;=\; \frac{q_L + q_g}{A}
+$$
+<p class="src">SOURCE: Beggs &amp; Brill (1973) <em>JPT</em> 607–617, SPE-4007-PA.</p>
+<p>Code: <span class="code-ref">src/multiphase_flow.py → resolve_flow, beggs_brill_regime</span>.</p>
+</div>
+
+<h3>1.2 Horizontal liquid holdup by regime</h3>
+<div class="eq-card">
+$$
+E_L(0) \;=\; \frac{a\,\lambda_L^{\,b}}{\mathrm{Fr}^{\,c}},
+\qquad E_L(0) \ge \lambda_L
+$$
+with $(a,b,c)$ selected per flow regime (segregated / intermittent / distributed) from the regime boundaries $L_1\!-\!L_4$.
+<p class="src">SOURCE: Beggs &amp; Brill (1973), Table of regime coefficients.</p>
+<p>Code: <span class="code-ref">src/multiphase_flow.py → beggs_brill_holdup</span>.</p>
+</div>
+
+<h3>1.3 Transition regime — A-weighted blend</h3>
+<div class="eq-card">
+$$
+E_L \;=\; A\,E_L^{\text{seg}} \;+\; (1-A)\,E_L^{\text{int}},
+\qquad
+A \;=\; \frac{L_3 - \mathrm{Fr}}{L_3 - L_2}
+$$
+<div class="note">The transition holdup is the Froude-weighted interpolation between the segregated and intermittent correlations — not a flat 0.5 average (audit correction).</div>
+<p>Code: <span class="code-ref">src/multiphase_flow.py → beggs_brill_holdup (regime="transition")</span>.</p>
+</div>
+
+<!-- ─────────────────────────────────────────────────────────── -->
+<h2 id="hydro">2. Hydrodynamics — Wall Shear &amp; Mass Transfer</h2>
+
+<h3>2.1 NORSOK wall shear stress (Eq.21-22)</h3>
+<div class="eq-card">
+$$
+\tau_w \;=\; \tfrac{1}{2}\,\rho_m\,f\,u_m^{2},
+\qquad
+f \;=\; 0.001375\left[\,1 + \left(\frac{2\times10^{4}\,\varepsilon}{D} + \frac{10^{6}\,\mu_m}{\rho_m\,u_m\,D}\right)^{\!1/3}\,\right]
+$$
+<div class="note">The friction bracket is raised to the cube root $1/3$ (audit correction), not $0.33$.</div>
+<p class="src">SOURCE: NORSOK M-506:2017 Eqs.21–22.</p>
+<p>Code: <span class="code-ref">src/hydrodynamics.py → norsok_wall_shear</span>.</p>
+</div>
+
+<h3>2.2 Berger-Hau mass transfer</h3>
+<div class="eq-card">
+$$
+\mathrm{Sh} \;=\; 0.0165\,\mathrm{Re}^{0.86}\,\mathrm{Sc}^{0.33},
+\qquad
+k_m \;=\; \frac{\mathrm{Sh}\,D_{AB}}{D}
+$$
+<div class="note">The mass-transfer coefficient and the Beggs-Brill holdup are computed as <strong>diagnostics</strong>; the flow effect on corrosion is carried by the NORSOK wall-shear term $\tau_w$ (as NORSOK M-506 intends), not by $k_m$ or $E_L$.</div>
+<p class="src">SOURCE: Berger &amp; Hau (1977) <em>Int. J. Heat Mass Transfer</em> 20:1185–1194.</p>
+<p>Code: <span class="code-ref">src/hydrodynamics.py → sherwood_berger_hau, mass_transfer_coefficient</span>.</p>
+</div>
+
+<h3>2.3 Elbow angular shear profile — prescribed shape [T3]</h3>
+<div class="eq-card">
+The angular distribution of wall shear around the 90° elbow is a <strong>prescribed analytical shape</strong> (two hand-fitted Gaussian bumps) whose peak <em>locations</em> are set to match the pattern reported by El-Gammal (2010) / Kim (2021) — an extrados feature near 37° and a stronger intrados inlet peak. It is an input shape fitted to the experiment, <strong>not</strong> a resolved CFD field.
+<p class="src">SOURCE: peak locations — El-Gammal et al. (2010) <em>Nucl. Eng. Des.</em> 240:1589; Kim et al. (2021) <em>Nucl. Eng. Tech.</em> 53:3003. Profile shape = tuned fit [T3].</p>
+<p>Code: <span class="code-ref">src/hydrodynamics.py → elbow_angular_shear_profile</span>.</p>
+</div>
+
+<!-- ─────────────────────────────────────────────────────────── -->
+<h2 id="erosion">3. Sand Erosion — DNV-RP-O501 Rev.4.2</h2>
+
+<h3>3.1 Characteristic bend impact angle</h3>
+<div class="eq-card">
+$$
+\alpha \;=\; \arctan\!\left(\frac{1}{2\sqrt{R/D}}\right)
+$$
+<p class="src">SOURCE: DNV-RP-O501 Rev.4.2 (2007), Sec.8.4.</p>
+<p>Code: <span class="code-ref">src/erosion_dnv.py → characteristic_bend_angle</span>.</p>
+</div>
+
+<h3>3.2 Bend erosion rate (Eq.8.15-8.21)</h3>
+<div class="eq-card">
+$$
+\dot{E}_L \;=\; \left[\frac{K\,\dot{m}_p\,U_p^{\,n}\,F(\alpha)}{\rho_t\,A_t}\right] C_1\,C_{\text{unit}},
+\qquad
+A_t \;=\; \frac{\pi D^{2}}{4\sin\alpha}
+$$
+<div class="note">The angle dependence is carried by $F(\alpha)$ and by the $1/\sin\alpha$ inside $A_t$. There is <strong>no additional standalone</strong> $\sin\alpha$ in the numerator — adding one double-counts the impact angle and underpredicts bend erosion by a factor $\sin\alpha$ (audit fix, ~2.6× at $R/D=1.5$).</div>
+<p class="src">SOURCE: DNV-RP-O501 Rev.4.2 Eqs.8.15–8.21; carbon steel $K=2.0\times10^{-9}$, $n=2.6$, $C_1=2.5$ (Table 7-2); $F(\alpha)$ 8-term polynomial (Table 7-1).</p>
+<p>Code: <span class="code-ref">src/erosion_dnv.py → erosion_bend, f_alpha</span>.</p>
+</div>
+
+<!-- ─────────────────────────────────────────────────────────── -->
+<h2 id="corrosion">4. CO₂ Corrosion — NORSOK M-506:2017 (Rev.3)</h2>
+
+<h3>4.1 Corrosion rate (Eq.1)</h3>
+<div class="eq-card">
+$$
+\mathrm{CR}_t \;=\; K_t\;f_{\mathrm{CO_2}}^{\,0.62}\;\left(\frac{S}{19}\right)^{0.146 + 0.0324\,\log_{10} f_{\mathrm{CO_2}}}\;f(\mathrm{pH})_t
+$$
+with the 9-node $K_t$ temperature table (5–150 °C; separate low-T forms at 5 °C and 15 °C), $S=\tau_w$ the wall shear, and $f(\mathrm{pH})_t$ from Table 2.
+<p class="src">SOURCE: NORSOK M-506:2017 Eq.1, Tables 1–2.</p>
+<p>Code: <span class="code-ref">src/corrosion_norsok.py → corrosion_rate, f_ph</span>.</p>
+</div>
+
+<h3>4.2 CO₂ fugacity (Eqs.4, 7-8)</h3>
+<div class="eq-card">
+$$
+f_{\mathrm{CO_2}} \;=\; a\,p_{\mathrm{CO_2}},
+\qquad
+a \;=\; 10^{\,P\left(0.0031 - \frac{1.4}{T}\right)}\;\;(P<250\ \text{bar})
+$$
+<div class="note">$f_{\mathrm{CO_2}}$ is clamped to the NORSOK applicability window $[0.1,\,10]$ bar so an out-of-range fugacity is not silently extrapolated through the power law (audit guard).</div>
+<p class="src">SOURCE: NORSOK M-506:2017 Eq.4, Clause 8.1 Eqs.7–8.</p>
+<p>Code: <span class="code-ref">src/corrosion_norsok.py → co2_fugacity, fugacity_coefficient</span>.</p>
+</div>
+
+<!-- ─────────────────────────────────────────────────────────── -->
+<h2 id="synergy">5. Erosion-Corrosion Synergy — ASTM G119</h2>
+
+<h3>5.1 Additive decomposition</h3>
+<div class="eq-card">
+$$
+T \;=\; W_0 + C_0 + S,
+\qquad
+S \;=\; \Delta C_w + \Delta W_c
+$$
+where $W_0$ is pure erosion, $C_0$ is scale-protected corrosion, $\Delta C_w$ is erosion-enhanced corrosion, and $\Delta W_c$ is corrosion-enhanced erosion.
+<p class="src">SOURCE: ASTM G119 Standard Guide for Determining Synergism Between Wear and Corrosion.</p>
+<p>Code: <span class="code-ref">src/synergy_g119.py → decompose</span>.</p>
+</div>
+
+<h3>5.2 Scale-removal model [HEURISTIC / T3]</h3>
+<div class="eq-card">
+$$
+f_{\text{rm}} \;=\; 1 - (1-f_\tau)(1-f_E),
+\quad
+f_\tau = 1 - e^{-\tau_w/\tau_c},
+\quad
+f_E = 1 - e^{-W_0/E_c}
+$$
+$$
+\Delta C_w \;=\; f_{\text{rm}}\,(C_{\text{bare}} - C_0),
+\qquad
+\Delta W_c \;=\; 0.25\,W_0\,f_{\text{rm}}
+$$
+<div class="note">The threshold $\tau_c = 15$ Pa, the erosion scale $E_c = 0.5$ mm/yr, and the $0.25$ coefficient are <strong>heuristic (T3)</strong> parameters. ASTM G119 supplies the additive framework, not the predictive split; NORSOK M-506 has no quantitative descaling law. The bare-steel rate $C_{\text{bare}}$ is a T3 proxy (NORSOK evaluated at elevated shear).</div>
+<p>Code: <span class="code-ref">src/synergy_g119.py → scale_removal_fraction, decompose</span>.</p>
+</div>
+
+<!-- ─────────────────────────────────────────────────────────── -->
+<h2 id="field">6. Wall-Loss Field &amp; Time-to-Perforation</h2>
+
+<div class="eq-card">
+Cumulative metal loss over the elbow surface is bounded by the wall thickness — the pipe perforates first and cannot thin further:
+$$
+\text{loss}(\theta,\varphi,t) \;=\; \min\!\bigl(\dot{L}(\theta,\varphi)\cdot t,\; t_{\text{wall}}\bigr),
+\qquad
+t_{\text{perf}} \;=\; \frac{t_{\text{wall}}}{\dot{L}_{\text{peak}}}
+$$
+with $t_{\text{wall}} = 12.7$ mm.
+<p class="src">SOURCE: metal loss is physically bounded by the wall (practitioner constraint) [T3].</p>
+<p>Code: <span class="code-ref">src/elbow_field.py → wall_loss_field, time_to_perforation</span>.</p>
+</div>
+
+<!-- ─────────────────────────────────────────────────────────── -->
+<h2 id="ffs">7. Fitness-for-Service — API 579-1 Part 5</h2>
+
+<div class="eq-card">
+Level-1 Remaining Strength Factor for a local thin area, with the Folias bulging factor $M_t$:
+$$
+R_{t,\text{loss}} \;=\; \frac{t_{\text{nom}} - t_{\text{act}}}{t_{\text{nom}}},
+\qquad
+M_t \;=\; \sqrt{1 + 0.48\,\lambda^{2}},
+\qquad
+\lambda \;=\; \frac{1.285\,L}{\sqrt{R\,t}}
+$$
+$$
+\mathrm{RSF} \;=\; \frac{1 - R_{t,\text{loss}}}{1 - R_{t,\text{loss}}/M_t},
+\qquad
+\mathrm{RSF}_a = 0.90
+$$
+A longer flaw (larger $M_t$) gives a lower RSF at the same depth.
+<p class="src">SOURCE: API 579-1/ASME FFS-1 Part 5, Level 1 RSF; Folias bulging factor.</p>
+<p>Code: <span class="code-ref">src/ffs_api579.py → rsf_part5, folias_factor</span>.</p>
+</div>
+
+<div class="disclaimer">
+<strong>Disclaimer:</strong> Research tool only. Not for design, fitness-for-service, or safety-critical decisions without site-specific calibration and independent PE review. Equations are grounded in the cited standards and papers; modelling assumptions that are not read directly from a controlled source are marked <code>[T3]</code> / heuristic (the ASTM G119 synergy split, the bare-steel proxy, and the prescribed elbow shear profile). Outputs are SHA-256 hash-chained; verify with the audit chain in <code>src/cybersecurity.py</code>.
+</div>
+
+<footer>
+  Integrity Code Series — Week 11 · Felipe Rocha · 466 / 466 tests passing · 14 QC-gate hand-calc benchmarks<br>
+  Browse the rendered panels in <code>assets/</code> for visual results.
+</footer>
+
+</body>
+</html>
