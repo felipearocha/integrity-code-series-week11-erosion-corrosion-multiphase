@@ -62,29 +62,42 @@ API 579-1 Part 5 RSF + remaining life
 
 ## Governing Equations
 
-Every constant is tagged to its source standard or paper. Full rendered (MathJax)
-reference: **[docs/equations.html](docs/equations.html)** — open in any browser.
+Every constant is tagged to its source standard or paper. The equations render
+below directly on GitHub; a full styled reference is in
+[`docs/equations.html`](docs/equations.html) —
+[**view it rendered**](https://htmlpreview.github.io/?https://github.com/felipearocha/integrity-code-series-week11-erosion-corrosion-multiphase/blob/main/docs/equations.html).
 
-### Erosion - DNV-RP-O501 Rev.4.2 (designated by NORSOK P-002 Clause 8.6.4)
-- Bend rate (Eq.8.15-8.21): characteristic angle `alpha = atan(1/(2*sqrt(R/D)))`,
-  `E = [K m_dot U^n F(alpha)/(rho_t A_t)] C1 C_unit`, `A_t = pi D^2/(4 sin alpha)`
-  (angle dependence is F(alpha) and the 1/sin(alpha) in A_t - no extra sin term)
-- Carbon steel: K = 2.0e-9, n = 2.6, C1 = 2.5 (Table 7-2)
-- Angle function F(alpha): 8-term polynomial (Table 7-1)
+### Sand erosion — DNV-RP-O501 Rev.4.2 (designated by NORSOK P-002 Clause 8.6.4)
 
-### Corrosion - NORSOK M-506:2017 (Rev.3)
-- `CR_t = K_t fCO2^0.62 (S/19)^(0.146+0.0324 log10 fCO2) f(pH)_t`  (Eq.1)
-- 9-node Kt table (5-150 C); separate low-T equations at 5 C and 15 C
-- Wall shear S from Eq.21-22; pH factor from Table 2
+Characteristic bend impact angle and bend erosion rate (Eqs. 8.15–8.21):
 
-### Synergy - ASTM G119
-- `T = E0 + C0 + dCw + dWc`; scale-removal fraction driven by wall shear + erosion
+$$\alpha = \arctan\left(\frac{1}{2\sqrt{R/D}}\right) \qquad \dot{E}_L = \left[\frac{K\,\dot{m}_p\,U_p^{n}\,F(\alpha)}{\rho_t\,A_t}\right] C_1\,C_\mathrm{unit} \qquad A_t = \frac{\pi D^2}{4\sin\alpha}$$
 
-### Multiphase flow - Beggs-Brill (1973)
-- Regime boundaries L1-L4; horizontal holdup E_L(0) = a C_L^b / Fr^c
+The angle dependence is carried by $F(\alpha)$ and by the $1/\sin\alpha$ inside $A_t$ — there is **no extra** $\sin\alpha$ in the numerator (adding one underpredicts bend erosion by a factor $\sin\alpha$). Carbon steel $K=2.0\times10^{-9}$, $n=2.6$, $C_1=2.5$ (Table 7-2); $F(\alpha)$ is the 8-term polynomial (Table 7-1).
 
-### FFS - API 579-1 Part 5
-- RSF, RSFa = 0.90, remaining life = (t_actual - t_min)/rate
+### CO₂ corrosion — NORSOK M-506:2017 (Rev.3)
+
+$$\mathrm{CR}_t = K_t\, f_{\mathrm{CO_2}}^{0.62} \left(\frac{S}{19}\right)^{0.146 + 0.0324\log_{10} f_{\mathrm{CO_2}}} f(\mathrm{pH})_t \qquad f_{\mathrm{CO_2}} = a\,p_{\mathrm{CO_2}} \qquad a = 10^{\,P(0.0031 - 1.4/T)}$$
+
+9-node $K_t$ table (5–150 °C; separate low-temperature forms at 5 °C and 15 °C); wall shear $S$ from Eqs. 21–22; $f(\mathrm{pH})_t$ from Table 2; $f_{\mathrm{CO_2}}$ clamped to the $[0.1,\,10]$ bar window.
+
+### Multiphase flow — Beggs-Brill (1973)
+
+$$\lambda_L = \frac{q_L}{q_L+q_g} \qquad E_L(0) = \frac{a\,\lambda_L^{b}}{\mathrm{Fr}^{c}} \qquad E_L^{\text{trans}} = A\,E_L^{\text{seg}} + (1-A)\,E_L^{\text{int}},\quad A = \frac{L_3-\mathrm{Fr}}{L_3-L_2}$$
+
+### Wall shear and mass transfer (NORSOK Eqs. 21–22 · Berger-Hau)
+
+$$\tau_w = \tfrac{1}{2}\rho_m f\,u_m^2 \qquad f = 0.001375\left[1 + \left(\frac{2\times10^4\,\varepsilon}{D} + \frac{10^6\,\mu_m}{\rho_m u_m D}\right)^{1/3}\right] \qquad \mathrm{Sh} = 0.0165\,\mathrm{Re}^{0.86}\,\mathrm{Sc}^{0.33}$$
+
+### Erosion-corrosion synergy — ASTM G119
+
+$$T = W_0 + C_0 + S \qquad S = \Delta C_w + \Delta W_c$$
+
+The scale-removal split is driven by wall shear and erosion; its coefficients are heuristic (see [Model-fidelity notes](#model-fidelity-notes-honest-scope)).
+
+### Fitness-for-service — API 579-1 Part 5 (RSF with Folias factor)
+
+$$\mathrm{RSF} = \frac{1 - R_t}{1 - R_t/M_t} \qquad M_t = \sqrt{1 + 0.48\,\lambda^2} \qquad \lambda = \frac{1.285\,L}{\sqrt{R\,t}} \qquad \mathrm{RSF}_a = 0.90$$
 
 ## Quickstart
 
