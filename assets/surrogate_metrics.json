@@ -1,0 +1,9 @@
+{
+  "r2": 0.98943,
+  "backend": "sklearn",
+  "target": "log10(total_mm_yr)",
+  "mae_log10": 0.04085,
+  "rmse_log10": 0.05507,
+  "mae_mm_yr": 1.1177,
+  "rmse_mm_yr": 1.8077
+}

@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+pytest-cache-files-*/
+
+# Local editor / tool settings — never publish
+.claude/
+
+# Windows / OneDrive artifacts
+desktop.ini
+Thumbs.db
+
+# LinkedIn post drafts — kept local, not published
+linkedin/

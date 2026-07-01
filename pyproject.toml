@@ -1,0 +1,10 @@
+[project]
+name = "integrity-code-series-week11-erosion-corrosion"
+version = "1.0.0"
+description = "Coupled erosion-corrosion of multiphase oil & gas piping at bends"
+authors = [{name = "Felipe Rocha"}]
+license = {text = "MIT"}
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
