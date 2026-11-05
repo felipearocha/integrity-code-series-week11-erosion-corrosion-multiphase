@@ -23,7 +23,6 @@
     "API 579",
     "fitness-for-service",
     "Monte Carlo",
-    "fracture mechanics",
     "asset integrity"
   ],
   "related_identifiers": [
@@ -44,8 +43,8 @@
     "API (2016). API 579-1/ASME FFS-1 Fitness-for-Service, Part 5.",
     "API RP 571 Damage Mechanisms Affecting Fixed Equipment in the Refining Industry, Sec. 3.27.",
     "El-Gammal M. et al. (2010). The hydrodynamic effects of single-phase flow on flow accelerated corrosion in a 90-degree elbow. Nuclear Engineering and Design 240: 1589-1598.",
-    "Kim J. et al. (2021). Flow-accelerated corrosion of elbow pipes. Nuclear Engineering and Technology 53: 3003-3011.",
-    "Madani Sani F. et al. (2019). A critical review of the API RP 14E erosional velocity. Wear 426-427."
+    "Kim et al. (2021). Flow-accelerated corrosion assessment for SA106 and SA335 pipes with elbows and welds. Nuclear Engineering and Technology 53: 3003-3011.",
+    "Madani Sani F. et al. (2019). Review of the API RP 14E erosional velocity equation: Origin, applications, misuses, limitations and alternatives. Wear 426-427: 620-636."
   ],
   "language": "eng",
   "version": "1.0.0"
