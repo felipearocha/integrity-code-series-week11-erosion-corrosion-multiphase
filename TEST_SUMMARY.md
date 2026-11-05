@@ -1,6 +1,6 @@
 # Test Summary - ICS Week 11
 
-**466 tests passing, 0 failures.** (ICS2 Triple QC minimum: 300)
+**471 tests passing, 0 failures.** (ICS2 Triple QC minimum: 300)
 
 | Category | File | Focus |
 |----------|------|-------|
@@ -20,7 +20,7 @@
 ## QC Gates
 - Gate 1 (Physics): 14/14 analytical hand-calcs pass (validation/benchmarks.py)
 - Gate 2 (Visualization): hero + 6 secondary PNGs + 60-frame GIF, ICS2 palette, 300 DPI
-- Gate 3 (Tests): 466/466 pass
+- Gate 3 (Tests): 471/471 pass
 
 Run:
 ```
