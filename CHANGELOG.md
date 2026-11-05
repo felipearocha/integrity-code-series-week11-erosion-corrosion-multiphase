@@ -1,5 +1,10 @@
 # Changelog
 
+## [Unreleased]
+- FIX (physics): DNV bend impact angle now follows Eq.8.15, alpha = atan(1/sqrt(2 R/D)):
+  30.0 deg at R/D=1.5 (was 22.2 deg), bend erosion x1.37 at that geometry. The QC gate
+  and tests had pinned the old form and now use the hand value.
+
 ## v1.0.0 (2026-07-01) - audit remediation, included in the tagged release
 - FIX (blocker): elbow wall-loss field is clamped to the pipe wall (12.7 mm);
   hero/GIF no longer show metal loss beyond the wall and report time-to-perforation.

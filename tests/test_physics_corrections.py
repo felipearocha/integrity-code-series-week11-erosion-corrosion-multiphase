@@ -29,7 +29,7 @@ def test_bend_erosion_has_no_extra_sin_alpha():
     # DNV-RP-O501 bend: E = K*m*U^n*F(alpha)/(rho_t*A_t)*C1*C_unit, A_t = pi*D^2/(4 sin a).
     # The only angle factors are F(alpha) and the 1/sin(alpha) inside A_t.
     m_dot, u_p, d, rod = 1.0e-4, 15.0, 0.1, 1.5
-    alpha = math.radians(ero.characteristic_bend_angle(rod))
+    alpha = math.radians(30.0)  # Eq.8.15 by hand at R/D=1.5
     a_t = math.pi * d ** 2 / (4.0 * math.sin(alpha))
     fa = ero.f_alpha(math.degrees(alpha))
     expected = (C.DNV_K_STEEL * m_dot * u_p ** C.DNV_N_STEEL * fa) / (C.RHO_STEEL * a_t) \
