@@ -16,6 +16,8 @@ Written test-first: with the pre-remediation code these FAIL.
 """
 import math
 
+import pytest
+
 from src import constants as C
 from src import erosion_dnv as ero
 from src import multiphase_flow as mpf
@@ -77,6 +79,12 @@ def test_corrosion_rate_guards_fco2_envelope():
     # to an absurd rate; expect either a clamp (bounded) or a raised flag.
     cr = cor.corrosion_rate(60.0, 500.0, 500.0, 19.0, 4.0)
     assert cr < 60.0, f"fCO2 far outside envelope silently extrapolated to {cr:.1f} mm/yr"
+
+
+def test_folias_factor_uses_diameter_handcalc():
+    # L=200, R=84 (D=168), t=12.7: lambda = 1.285*200/sqrt(168*12.7) = 5.5645,
+    # Mt = sqrt(1 + 0.48*lambda^2) = 3.9824
+    assert ffs.folias_factor(200.0, 84.0, 12.7) == pytest.approx(3.9824, abs=1e-3)
 
 
 def test_api579_rsf_uses_folias_bulging_factor():

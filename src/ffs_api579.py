@@ -12,13 +12,16 @@ from . import constants as C
 
 def folias_factor(lta_length_mm: float, radius_mm: float, t_mm: float) -> float:
     """Folias / bulging factor Mt for a longitudinal local thin area.
-        lambda = 1.285 * L / sqrt(R * t) ;  Mt = sqrt(1 + 0.48 * lambda^2)
+        lambda = 1.285 * L / sqrt(D * t) ;  Mt = sqrt(1 + 0.48 * lambda^2),  D = 2R
     Mt >= 1, growing with flaw length -> a longer flaw is weaker.
-    [SOURCE: API 579-1/ASME FFS-1 Part 5, Folias factor]  T1
+    D, not R: 0.48 * 1.285^2 = 0.79 recovers the classic Folias form
+    M^2 = 1 + 0.8 L^2 / (D t).
+    [SOURCE: Folias factor as used in API 579-1/ASME FFS-1 Part 5; form checked
+    against the classic Folias expression, API 579 text not opened here]  T3
     """
     if radius_mm <= 0 or t_mm <= 0:
         raise ValueError("radius and thickness must be positive")
-    lam = 1.285 * max(lta_length_mm, 0.0) / math.sqrt(radius_mm * t_mm)
+    lam = 1.285 * max(lta_length_mm, 0.0) / math.sqrt(2.0 * radius_mm * t_mm)
     return math.sqrt(1.0 + 0.48 * lam ** 2)
 
 
