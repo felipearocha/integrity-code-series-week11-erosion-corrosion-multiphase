@@ -204,9 +204,9 @@ The angular distribution of wall shear around the 90° elbow is a <strong>prescr
 <h3>3.1 Characteristic bend impact angle</h3>
 <div class="eq-card">
 $$
-\alpha \;=\; \arctan\!\left(\frac{1}{2\sqrt{R/D}}\right)
+\alpha \;=\; \arctan\!\left(\frac{1}{\sqrt{2\,R/D}}\right)
 $$
-<p class="src">SOURCE: DNV-RP-O501 Rev.4.2 (2007), Sec.8.4.</p>
+<p class="src">SOURCE: DNV-RP-O501 Rev.4.2 (2007), Sec.8.4, Eq.8.15.</p>
 <p>Code: <span class="code-ref">src/erosion_dnv.py → characteristic_bend_angle</span>.</p>
 </div>
 
@@ -217,8 +217,8 @@ $$
 \qquad
 A_t \;=\; \frac{\pi D^{2}}{4\sin\alpha}
 $$
-<div class="note">The angle dependence is carried by $F(\alpha)$ and by the $1/\sin\alpha$ inside $A_t$. There is <strong>no additional standalone</strong> $\sin\alpha$ in the numerator — adding one double-counts the impact angle and underpredicts bend erosion by a factor $\sin\alpha$ (audit fix, ~2.6× at $R/D=1.5$).</div>
-<p class="src">SOURCE: DNV-RP-O501 Rev.4.2 Eqs.8.15–8.21; carbon steel $K=2.0\times10^{-9}$, $n=2.6$, $C_1=2.5$ (Table 7-2); $F(\alpha)$ 8-term polynomial (Table 7-1).</p>
+<div class="note">The angle dependence is carried by $F(\alpha)$ and by the $1/\sin\alpha$ inside $A_t$. There is <strong>no additional standalone</strong> $\sin\alpha$ in the numerator — adding one double-counts the impact angle and underpredicts bend erosion by a factor $\sin\alpha$ (audit fix, 2× at $R/D=1.5$).</div>
+<p class="src">SOURCE: DNV-RP-O501 Rev.4.2 Eqs.8.15–8.21; carbon steel $K=2.0\times10^{-9}$, $n=2.6$ (Table 7-2); $C_1=2.5$ (Sec. 8.4); $F(\alpha)$ 8-term polynomial (Table 7-1).</p>
 <p>Code: <span class="code-ref">src/erosion_dnv.py → erosion_bend, f_alpha</span>.</p>
 </div>
 
@@ -305,7 +305,7 @@ R_{t,\text{loss}} \;=\; \frac{t_{\text{nom}} - t_{\text{act}}}{t_{\text{nom}}},
 \qquad
 M_t \;=\; \sqrt{1 + 0.48\,\lambda^{2}},
 \qquad
-\lambda \;=\; \frac{1.285\,L}{\sqrt{R\,t}}
+\lambda \;=\; \frac{1.285\,L}{\sqrt{D\,t}}
 $$
 $$
 \mathrm{RSF} \;=\; \frac{1 - R_{t,\text{loss}}}{1 - R_{t,\text{loss}}/M_t},
@@ -322,7 +322,7 @@ A longer flaw (larger $M_t$) gives a lower RSF at the same depth.
 </div>
 
 <footer>
-  Integrity Code Series — Week 11 · Felipe Rocha · 466 / 466 tests passing · 14 QC-gate hand-calc benchmarks<br>
+  Integrity Code Series — Week 11 · Felipe Rocha · 471 / 471 tests passing · 14 QC-gate hand-calc benchmarks<br>
   Browse the rendered panels in <code>assets/</code> for visual results.
 </footer>
 

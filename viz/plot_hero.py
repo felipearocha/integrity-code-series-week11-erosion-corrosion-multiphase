@@ -39,7 +39,7 @@ def _style(ax):
 
 
 def build():
-    # Representative sour multiphase elbow at a MODERATE operating point (a few
+    # Representative sweet multiphase elbow at a MODERATE operating point (a few
     # m/s, mild pH) so the 3-yr field shows a spatial gradient rather than
     # saturating the wall everywhere.
     import math
@@ -54,7 +54,7 @@ def build():
     service_years = 3.0
     angles, circ, loss = ef.wall_loss_field(
         res.shear_pa, res.erosion_mm_yr, res.corrosion_protected_mm_yr,
-        res.corrosion_bare_mm_yr, service_years)
+        res.corrosion_bare_mm_yr, service_years, res.f_co2)
     loss = np.array(loss)
     pk, pa_ang, pc_circ = ef.peak_loss(angles, circ, loss.tolist())
 

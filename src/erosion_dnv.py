@@ -47,12 +47,12 @@ def erosion_straight(m_dot_p: float, u_p: float, diameter_m: float) -> float:
 
 def characteristic_bend_angle(r_over_d: float) -> float:
     """Characteristic particle impact angle for a bend (Eq.8.15):
-        alpha = arctan( 1 / (2*sqrt(R/D)) )   [deg]
+        alpha = arctan( 1 / sqrt(2*R/D) )   [deg]
     [SOURCE: DNV-RP-O501 Rev.4.2 (2007) Eq.8.15]  T1
     """
     if r_over_d <= 0:
         raise ValueError("R/D must be positive")
-    return math.degrees(math.atan(1.0 / (2.0 * math.sqrt(r_over_d))))
+    return math.degrees(math.atan(1.0 / math.sqrt(2.0 * r_over_d)))
 
 
 def erosion_bend(m_dot_p: float, u_p: float, diameter_m: float,

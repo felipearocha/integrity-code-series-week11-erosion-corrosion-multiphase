@@ -4,8 +4,8 @@ constants.py - Physical constants, material data, and standard-derived coefficie
 Integrity Code Series - Week 11
 Erosion-Corrosion (synergistic) in multiphase oil & gas production piping at bends.
 
-EVERY constant carries an explicit [SOURCE: ...] tag per the ICS2 no-hallucination policy.
-Anti-hallucination tiers:
+Standard-derived constants carry an explicit [SOURCE: ...] tag.
+Source confidence tiers:
     T1 = directly from a controlled standard/paper copy
     T2 = calculated/derived from standard data
     T3 = practitioner heuristic (labelled)
@@ -157,6 +157,11 @@ G119_EXAMPLE = {"T": 387.0, "W0": 249.0, "C0": 2.10, "Cw": 3.75}
 # ----------------------------------------------------------------------------
 API579_RSF_ALLOWABLE = 0.90
 # [SOURCE: API 579-1/ASME FFS-1 Part 5, RSFa default]  T1
+
+B31_3_Y = 0.4
+# Pressure-design Y coefficient, ASME B31.3 Table 304.1.1 value commonly used for
+# ferritic steel below creep range; table not opened here.
+# [SOURCE: ASME B31.3 Table 304.1.1 - practitioner]  T3
 
 # ----------------------------------------------------------------------------
 # Fluid property defaults (NORSOK M-506:2017 Table 5 defaults)

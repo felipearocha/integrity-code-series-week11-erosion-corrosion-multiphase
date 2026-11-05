@@ -35,9 +35,10 @@ def test_bend_angle_decreases_with_rd(rd):
     assert ero.characteristic_bend_angle(rd) <= a_small + 1e-9
 
 
-def test_bend_angle_handcalc():
-    expected = math.degrees(math.atan(1.0 / (2.0 * math.sqrt(1.5))))
-    assert ero.characteristic_bend_angle(1.5) == pytest.approx(expected)
+@pytest.mark.parametrize("rd,expected", [(1.5, 30.0), (2.0, 26.56505), (0.5, 45.0)])
+def test_bend_angle_handcalc(rd, expected):
+    # DNV-RP-O501 Eq.8.15 by hand: atan(1/sqrt(3)), atan(1/2), atan(1)
+    assert ero.characteristic_bend_angle(rd) == pytest.approx(expected, abs=1e-4)
 
 
 @pytest.mark.parametrize("a", range(0, 91, 5))

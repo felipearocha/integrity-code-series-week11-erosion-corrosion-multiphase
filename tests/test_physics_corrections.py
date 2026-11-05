@@ -16,6 +16,8 @@ Written test-first: with the pre-remediation code these FAIL.
 """
 import math
 
+import pytest
+
 from src import constants as C
 from src import erosion_dnv as ero
 from src import multiphase_flow as mpf
@@ -29,7 +31,7 @@ def test_bend_erosion_has_no_extra_sin_alpha():
     # DNV-RP-O501 bend: E = K*m*U^n*F(alpha)/(rho_t*A_t)*C1*C_unit, A_t = pi*D^2/(4 sin a).
     # The only angle factors are F(alpha) and the 1/sin(alpha) inside A_t.
     m_dot, u_p, d, rod = 1.0e-4, 15.0, 0.1, 1.5
-    alpha = math.radians(ero.characteristic_bend_angle(rod))
+    alpha = math.radians(30.0)  # Eq.8.15 by hand at R/D=1.5
     a_t = math.pi * d ** 2 / (4.0 * math.sin(alpha))
     fa = ero.f_alpha(math.degrees(alpha))
     expected = (C.DNV_K_STEEL * m_dot * u_p ** C.DNV_N_STEEL * fa) / (C.RHO_STEEL * a_t) \
@@ -42,10 +44,20 @@ def test_bend_erosion_has_no_extra_sin_alpha():
 def test_wall_loss_field_is_clamped_to_wall_thickness():
     # Aggressive rates over a long interval must not report metal loss beyond the wall.
     angles, circ, loss = ef.wall_loss_field(
-        s_mean=100.0, e0_bend=5.0, c0_protected=8.0, c0_bare=12.0, service_years=20.0)
+        s_mean=100.0, e0_bend=5.0, c0_protected=8.0, c0_bare=12.0, service_years=20.0,
+        f_co2=1.0)
     peak, a_deg, c_deg = ef.peak_loss(angles, circ, loss)
     assert peak <= C.WALL_THICKNESS_MM + 1e-9, (
         f"wall loss {peak:.2f} mm exceeds the {C.WALL_THICKNESS_MM} mm wall")
+
+
+def test_wall_loss_field_uses_norsok_shear_exponent():
+    # No erosion and c0_bare == c0, so the field is pure c0 * (S_local/S_mean)^exp.
+    # At fCO2 = 1 bar the NORSOK exponent is 0.146.
+    s_mean = 20.0
+    angles, circ, loss = ef.wall_loss_field(s_mean, 0.0, 1.0, 1.0, 1.0, f_co2=1.0)
+    _, s_ext, _ = hyd.elbow_angular_shear_profile(s_mean, len(angles))
+    assert loss[20][0] == pytest.approx((s_ext[20] / s_mean) ** 0.146)
 
 
 def test_beggs_brill_transition_holdup_is_A_weighted():
@@ -77,6 +89,12 @@ def test_corrosion_rate_guards_fco2_envelope():
     # to an absurd rate; expect either a clamp (bounded) or a raised flag.
     cr = cor.corrosion_rate(60.0, 500.0, 500.0, 19.0, 4.0)
     assert cr < 60.0, f"fCO2 far outside envelope silently extrapolated to {cr:.1f} mm/yr"
+
+
+def test_folias_factor_uses_diameter_handcalc():
+    # L=200, R=84 (D=168), t=12.7: lambda = 1.285*200/sqrt(168*12.7) = 5.5645,
+    # Mt = sqrt(1 + 0.48*lambda^2) = 3.9824
+    assert ffs.folias_factor(200.0, 84.0, 12.7) == pytest.approx(3.9824, abs=1e-3)
 
 
 def test_api579_rsf_uses_folias_bulging_factor():
