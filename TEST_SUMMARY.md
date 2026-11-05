@@ -1,6 +1,6 @@
 # Test Summary - ICS Week 11
 
-**460 tests passing, 0 failures.** (ICS2 Triple QC minimum: 300)
+**466 tests passing, 0 failures.** (ICS2 Triple QC minimum: 300)
 
 | Category | File | Focus |
 |----------|------|-------|
@@ -15,11 +15,12 @@
 | Surrogate | test_surrogate.py | GBR train/test, R2, finite predictions |
 | Cybersecurity | test_cybersecurity.py | Hash-chain tamper detection, sensor validation, fingerprint |
 | Visualization | test_visualization.py | Asset existence, PNG headers, GIF >=50 frames, dataset >=10k rows |
+| Regression | test_physics_corrections.py | Audit fixes: bend erosion, wall-loss clamp, transition holdup, Eq.22 cube root, fCO2 window, Part 5 RSF |
 
 ## QC Gates
-- Gate 1 (Physics): 11/11 analytical hand-calcs pass (validation/benchmarks.py)
+- Gate 1 (Physics): 14/14 analytical hand-calcs pass (validation/benchmarks.py)
 - Gate 2 (Visualization): hero + 6 secondary PNGs + 60-frame GIF, ICS2 palette, 300 DPI
-- Gate 3 (Tests): 460/460 pass
+- Gate 3 (Tests): 466/466 pass
 
 Run:
 ```
