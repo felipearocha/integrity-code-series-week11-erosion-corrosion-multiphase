@@ -104,8 +104,10 @@ def evaluate(op: Operating) -> ECResult:
 
 def remaining_life_years(op: Operating, result: ECResult,
                          allow_stress_mpa: float = 138.0) -> float:
-    """Remaining life from the total wall-loss rate (API 579 / API 510)."""
+    """Remaining life from the total wall-loss rate (API 570 Sec.7.2), with
+    t_required from ASME B31.3 para. 304.1.2. diameter_m is the bore, so the
+    outside diameter is bore + 2 * nominal wall."""
     p_mpa = op.p_total_bar * 0.1
-    radius_mm = op.diameter_m * 1000.0 / 2.0
-    t_min = ffs.t_min_pressure(p_mpa, radius_mm, allow_stress_mpa)
+    od_mm = op.diameter_m * 1000.0 + 2.0 * op.t_nominal_mm
+    t_min = ffs.t_min_pressure(p_mpa, od_mm, allow_stress_mpa)
     return ffs.remaining_life(op.t_nominal_mm, t_min, result.total_mm_yr)

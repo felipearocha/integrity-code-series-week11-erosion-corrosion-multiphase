@@ -158,6 +158,11 @@ G119_EXAMPLE = {"T": 387.0, "W0": 249.0, "C0": 2.10, "Cw": 3.75}
 API579_RSF_ALLOWABLE = 0.90
 # [SOURCE: API 579-1/ASME FFS-1 Part 5, RSFa default]  T1
 
+B31_3_Y = 0.4
+# Pressure-design Y coefficient, ASME B31.3 Table 304.1.1 value commonly used for
+# ferritic steel below creep range; table not opened here.
+# [SOURCE: ASME B31.3 Table 304.1.1 - practitioner]  T3
+
 # ----------------------------------------------------------------------------
 # Fluid property defaults (NORSOK M-506:2017 Table 5 defaults)
 # ----------------------------------------------------------------------------

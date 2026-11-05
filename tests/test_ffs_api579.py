@@ -13,6 +13,11 @@ def test_tmin_positive(p, r, s):
     assert ffs.t_min_pressure(p, r, s) > 0
 
 
+def test_tmin_b31_3_handcalc():
+    # B31.3 304.1.2: t = P*D/(2*(S*E*W + P*Y)) = 10*200/(2*(138 + 10*0.4)) = 7.042
+    assert ffs.t_min_pressure(10, 200, 138) == pytest.approx(7.0423, abs=1e-3)
+
+
 def test_tmin_bad_combo():
     with pytest.raises(ValueError):
         ffs.t_min_pressure(300, 75, 138)

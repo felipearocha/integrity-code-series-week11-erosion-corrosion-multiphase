@@ -1,7 +1,7 @@
 """
 ffs_api579.py - API 579-1/ASME FFS-1 Part 5 local metal loss + remaining life.
 
-[SOURCE: API 579-1/ASME FFS-1 Part 5 (RSFa=0.90); API 510 remaining life]  T1
+[SOURCE: API 579-1/ASME FFS-1 Part 5 (RSFa=0.90); API 570 Sec.7.2 remaining life]  T1
 """
 from __future__ import annotations
 
@@ -47,16 +47,19 @@ def rsf_part5(t_actual: float, t_nominal: float,
     return max(0.0, min(1.0, (1.0 - rt_loss) / denom))
 
 
-def t_min_pressure(p_mpa: float, radius_mm: float, allow_stress_mpa: float,
-                   weld_eff: float = 1.0) -> float:
-    """Minimum required thickness (circumferential stress, thin-wall):
-        t_min = P*R / (S*E - 0.6*P)
-    [SOURCE: ASME B31.3 / API 510 pressure design]  T1
+def t_min_pressure(p_mpa: float, outside_diameter_mm: float,
+                   allow_stress_mpa: float, quality_e: float = 1.0,
+                   weld_w: float = 1.0) -> float:
+    """Pressure-design thickness of straight pipe, D = outside diameter:
+        t = P*D / (2*(S*E*W + P*Y))
+    Valid for thin wall only: a result with t >= D/6 is rejected.
+    [SOURCE: ASME B31.3 para. 304.1.2]  T1
     """
-    denom = allow_stress_mpa * weld_eff - 0.6 * p_mpa
-    if denom <= 0:
-        raise ValueError("invalid pressure/stress combination")
-    return p_mpa * radius_mm / denom
+    t = p_mpa * outside_diameter_mm / (
+        2.0 * (allow_stress_mpa * quality_e * weld_w + p_mpa * C.B31_3_Y))
+    if t >= outside_diameter_mm / 6.0:
+        raise ValueError("thick-wall case: t >= D/6 is outside this formula")
+    return t
 
 
 def remaining_strength_factor(t_actual: float, t_min: float,
@@ -87,7 +90,7 @@ def reduced_mawp(mawp: float, rsf: float) -> float:
 
 def remaining_life(t_actual: float, t_min: float, rate_mm_yr: float) -> float:
     """Remaining life = (t_actual - t_min) / corrosion_rate [years].
-    [SOURCE: API 510 remaining life]  T1
+    [SOURCE: API 570 Sec.7.2]  T1
     """
     if rate_mm_yr <= 0:
         return float("inf")
