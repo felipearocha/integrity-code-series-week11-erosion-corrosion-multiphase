@@ -6,14 +6,13 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
 [![Tests: 466 passing](https://img.shields.io/badge/tests-466%20passing-brightgreen.svg)](tests)
-[![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21114866.svg)](https://doi.org/10.5281/zenodo.21114866)
 
 ---
 
 **Service:** sand-laden CO2 (sweet) multiphase production piping, carbon steel, 90 deg elbows
 **Standards:** NORSOK M-506:2017 (Rev.3), DNV-RP-O501 Rev.4.2, NORSOK P-002, ASTM G119, API 571 Sec.3.27, API 579-1 Part 5
-**Validation:** Kim et al. (KAERI) Nucl Eng Tech 53 (2021) 3003-3011; Madani Sani et al. Wear 426-427 (2019)
+**Reference data:** Kim et al. (KAERI) Nucl Eng Tech 53 (2021) 3003-3011 (elbow peak locations fitted, experimental FAC rates plotted; not an independent validation); Madani Sani et al. Wear 426-427 (2019) 620-636
 
 ## Problem Statement
 
@@ -62,7 +61,7 @@ API 579-1 Part 5 RSF + remaining life
 
 ## Governing Equations
 
-Every constant is tagged to its source standard or paper. The equations render
+Standard-derived constants in `src/constants.py` are tagged to their source standard or paper. The equations render
 below directly on GitHub; a full styled reference is in
 [`docs/equations.html`](docs/equations.html) —
 [**view it rendered**](https://htmlpreview.github.io/?https://github.com/felipearocha/integrity-code-series-week11-erosion-corrosion-multiphase/blob/main/docs/equations.html).
@@ -73,7 +72,7 @@ Characteristic bend impact angle and bend erosion rate (Eqs. 8.15–8.21):
 
 $$\alpha = \arctan\left(\frac{1}{2\sqrt{R/D}}\right) \qquad \dot{E}_L = \left[\frac{K\,\dot{m}_p\,U_p^{n}\,F(\alpha)}{\rho_t\,A_t}\right] C_1\,C_\mathrm{unit} \qquad A_t = \frac{\pi D^2}{4\sin\alpha}$$
 
-The angle dependence is carried by $F(\alpha)$ and by the $1/\sin\alpha$ inside $A_t$ — there is **no extra** $\sin\alpha$ in the numerator (adding one underpredicts bend erosion by a factor $\sin\alpha$). Carbon steel $K=2.0\times10^{-9}$, $n=2.6$, $C_1=2.5$ (Table 7-2); $F(\alpha)$ is the 8-term polynomial (Table 7-1).
+The angle dependence is carried by $F(\alpha)$ and by the $1/\sin\alpha$ inside $A_t$ — there is **no extra** $\sin\alpha$ in the numerator (adding one underpredicts bend erosion by a factor $\sin\alpha$). Carbon steel $K=2.0\times10^{-9}$, $n=2.6$ (Table 7-2); $C_1=2.5$ (Sec. 8.4); $F(\alpha)$ is the 8-term polynomial (Table 7-1).
 
 ### CO₂ corrosion — NORSOK M-506:2017 (Rev.3)
 
@@ -98,6 +97,8 @@ The scale-removal split is driven by wall shear and erosion; its coefficients ar
 ### Fitness-for-service — API 579-1 Part 5 (RSF with Folias factor)
 
 $$\mathrm{RSF} = \frac{1 - R_t}{1 - R_t/M_t} \qquad M_t = \sqrt{1 + 0.48\,\lambda^2} \qquad \lambda = \frac{1.285\,L}{\sqrt{R\,t}} \qquad \mathrm{RSF}_a = 0.90$$
+
+Here $R_t$ is the fractional wall loss $(t_\mathrm{nom}-t_\mathrm{act})/t_\mathrm{nom}$, as coded in `rsf_part5()`.
 
 ## Quickstart
 
@@ -156,6 +157,8 @@ are near zero. "Erosion-corrosion" is the standard damage-mechanism name
 - Beggs-Brill liquid holdup and the Berger-Hau mass-transfer coefficient are
   computed as **diagnostics**; the flow effect on corrosion is carried by the
   NORSOK wall-shear term (as NORSOK M-506 intends), not by holdup or MTC.
+- The particle-size correction G of DNV-RP-O501 Eq. 8.21 is not applied (equivalent
+  to G = 1), and particle impact velocity is taken as the mixture velocity.
 - `ffs_api579.rsf_part5()` implements the true Part-5 Level-1 RSF with the Folias
   bulging factor Mt; `remaining_strength_factor()` is a depth-only screening proxy.
 
@@ -174,7 +177,7 @@ fingerprint; surrogate out-of-distribution fallback. See `src/cybersecurity.py`.
 
 ## Anti-Hallucination Note
 
-Every equation and constant carries an explicit `[SOURCE: ...]` tag with tier
+Standard-derived equations and constants carry an explicit `[SOURCE: ...]` tag with tier
 (T1 standard/paper, T2 derived, T3 practitioner). The NORSOK M-506 model was
 transcribed from the controlled 2017 (Rev.3) copy - not the older Rev.1 widely
 posted online, which lacks the 5 C / 15 C nodes and the pH2S applicability limit.
@@ -184,9 +187,9 @@ rather than a standard value it is tagged **T3** and called out in the
 "Model-fidelity notes" section above - specifically the ASTM G119 synergy split
 coefficients, the bare-steel-corrosion proxy, and the prescribed elbow shear
 profile (whose peak locations are fitted to El-Gammal/Kim, not resolved by CFD).
-The T1 constants that ARE read directly from a controlled copy - the NORSOK Kt
-9-node table, the DNV `F(alpha)` polynomial, and the Beggs-Brill holdup
-coefficients - are each verified against their source by a QC Gate hand-calc.
+The NORSOK Kt table and the DNV `F(alpha)` polynomial are exercised by QC Gate
+hand-calcs. The Beggs-Brill holdup coefficients have unit-test bounds only (no
+hand-calc in the gate).
 
 ## Disclaimer
 
