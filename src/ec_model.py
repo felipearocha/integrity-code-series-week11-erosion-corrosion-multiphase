@@ -53,6 +53,7 @@ class ECResult:
     total_mm_yr: float
     scale_removal: float
     corrosion_augmentation: float
+    f_co2: float
     applicable: bool
     note: str
 
@@ -98,6 +99,7 @@ def evaluate(op: Operating) -> ECResult:
         corrosion_bare_mm_yr=c0_bare, synergy_mm_yr=sr.synergy,
         total_mm_yr=sr.total, scale_removal=sr.scale_removal,
         corrosion_augmentation=sr.corrosion_augmentation,
+        f_co2=cor.clamped_fugacity(op.p_co2_bar, op.p_total_bar, C.c_to_k(op.temp_c)),
         applicable=applicable, note=note,
     )
 

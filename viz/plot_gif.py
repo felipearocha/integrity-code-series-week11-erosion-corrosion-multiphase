@@ -53,10 +53,10 @@ def build(n_frames=60, t_wall_mm=None):
     # loss at year t is min(rate*t, wall), applied per frame below.
     a, c, rate_clean = ef.wall_loss_field(
         clean.shear_pa, clean.erosion_mm_yr, clean.corrosion_protected_mm_yr,
-        clean.corrosion_bare_mm_yr, 1.0)
+        clean.corrosion_bare_mm_yr, 1.0, clean.f_co2)
     _, _, rate_sandy = ef.wall_loss_field(
         sandy.shear_pa, sandy.erosion_mm_yr, sandy.corrosion_protected_mm_yr,
-        sandy.corrosion_bare_mm_yr, 1.0)
+        sandy.corrosion_bare_mm_yr, 1.0, sandy.f_co2)
     lc = np.array(rate_clean)     # mm/yr per point
     ls = np.array(rate_sandy)
 

@@ -44,10 +44,20 @@ def test_bend_erosion_has_no_extra_sin_alpha():
 def test_wall_loss_field_is_clamped_to_wall_thickness():
     # Aggressive rates over a long interval must not report metal loss beyond the wall.
     angles, circ, loss = ef.wall_loss_field(
-        s_mean=100.0, e0_bend=5.0, c0_protected=8.0, c0_bare=12.0, service_years=20.0)
+        s_mean=100.0, e0_bend=5.0, c0_protected=8.0, c0_bare=12.0, service_years=20.0,
+        f_co2=1.0)
     peak, a_deg, c_deg = ef.peak_loss(angles, circ, loss)
     assert peak <= C.WALL_THICKNESS_MM + 1e-9, (
         f"wall loss {peak:.2f} mm exceeds the {C.WALL_THICKNESS_MM} mm wall")
+
+
+def test_wall_loss_field_uses_norsok_shear_exponent():
+    # No erosion and c0_bare == c0, so the field is pure c0 * (S_local/S_mean)^exp.
+    # At fCO2 = 1 bar the NORSOK exponent is 0.146.
+    s_mean = 20.0
+    angles, circ, loss = ef.wall_loss_field(s_mean, 0.0, 1.0, 1.0, 1.0, f_co2=1.0)
+    _, s_ext, _ = hyd.elbow_angular_shear_profile(s_mean, len(angles))
+    assert loss[20][0] == pytest.approx((s_ext[20] / s_mean) ** 0.146)
 
 
 def test_beggs_brill_transition_holdup_is_A_weighted():

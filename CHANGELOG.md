@@ -8,6 +8,8 @@
   (was the radius, which doubled the L^2 term of Mt^2).
 - FIX (standards): t_min now uses ASME B31.3 para. 304.1.2 with the outside diameter
   (was a P*R/(S*E-0.6P) form labelled B31.3); remaining life cites API 570 Sec.7.2, not API 510.
+- FIX (physics): elbow field scales corrosion with the NORSOK shear exponent
+  0.146+0.0324 log10(fCO2) (was an untagged 0.3 described as the NORSOK term).
 
 ## v1.0.0 (2026-07-01) - audit remediation, included in the tagged release
 - FIX (blocker): elbow wall-loss field is clamped to the pipe wall (12.7 mm);
