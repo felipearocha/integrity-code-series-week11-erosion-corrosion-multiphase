@@ -4,8 +4,8 @@ constants.py - Physical constants, material data, and standard-derived coefficie
 Integrity Code Series - Week 11
 Erosion-Corrosion (synergistic) in multiphase oil & gas production piping at bends.
 
-EVERY constant carries an explicit [SOURCE: ...] tag per the ICS2 no-hallucination policy.
-Anti-hallucination tiers:
+Standard-derived constants carry an explicit [SOURCE: ...] tag.
+Source confidence tiers:
     T1 = directly from a controlled standard/paper copy
     T2 = calculated/derived from standard data
     T3 = practitioner heuristic (labelled)
