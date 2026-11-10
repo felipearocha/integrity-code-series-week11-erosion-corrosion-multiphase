@@ -67,7 +67,7 @@ def build(n_frames=60, t_wall_mm=None):
     perf_clean = ef.time_to_perforation(lc.max(), t_wall_mm)
     perf_sandy = ef.time_to_perforation(ls.max(), t_wall_mm)
 
-    fig, (ax0, ax1, ax2) = plt.subplots(1, 3, figsize=(14, 4.6), dpi=150,
+    fig, (ax0, ax1, ax2) = plt.subplots(1, 3, figsize=(14, 4.6), dpi=100,
                                         gridspec_kw={"width_ratios": [1, 1, 0.9]})
     extent = [c[0], c[-1], a[0], a[-1]]
     im0 = ax0.imshow(np.minimum(lc * years[0], t_wall_mm), aspect="auto",
@@ -85,15 +85,17 @@ def build(n_frames=60, t_wall_mm=None):
     # peak-loss vs time, clamped at the wall
     peak_clean = np.minimum(lc.max() * years, t_wall_mm)
     peak_sandy = np.minimum(ls.max() * years, t_wall_mm)
-    ax2.set_xlim(0, years[-1]); ax2.set_ylim(0, t_wall_mm * 1.08)
+    ax2.set_xlim(0, years[-1]); ax2.set_ylim(0, t_wall_mm * 1.15)
     ax2.axhline(t_wall_mm, color=P["charcoal"], lw=1, ls="--")
-    ax2.text(0.2, t_wall_mm * 1.01, "nominal wall 12.7 mm (perforation)", fontsize=8,
-             color=P["charcoal"])
+    ax2.text(0.2, t_wall_mm * 1.035, f"nominal wall {t_wall_mm:.1f} mm (perforation)",
+             fontsize=8, color=P["charcoal"])
     line_c, = ax2.plot([], [], color=P["teal"], lw=2, label="clean")
     line_s, = ax2.plot([], [], color=P["dark_red"], lw=2, label="sand-laden")
+    perf_marks = []   # shown only once the animation reaches perforation
     for perf, col in [(perf_clean, P["teal"]), (perf_sandy, P["dark_red"])]:
         if math.isfinite(perf) and perf <= years[-1]:
-            ax2.plot(perf, t_wall_mm, marker="v", color=col, ms=9)
+            m, = ax2.plot(perf, t_wall_mm, marker="v", color=col, ms=9, visible=False)
+            perf_marks.append((perf, m))
     ax2.set_xlabel("Service time [yr]", fontsize=9)
     ax2.set_ylabel("Peak wall loss [mm]", fontsize=9)
     ax2.set_title("Peak wall loss vs time", fontsize=10, fontweight="bold")
@@ -102,10 +104,8 @@ def build(n_frames=60, t_wall_mm=None):
         for sp in ax.spines.values():
             sp.set_linewidth(0.7)
 
+    fig.subplots_adjust(wspace=0.45, bottom=0.12)   # keep colorbar label clear of panel 3
     txt = fig.suptitle("", fontsize=11, color=P["charcoal"])
-    pbar = fig.add_axes([0.12, 0.005, 0.76, 0.012])
-    pbar.axis("off")
-    prog = pbar.barh(0, 0, height=1, color=P["steel"])
 
     def update(k):
         yr = years[k]
@@ -115,7 +115,8 @@ def build(n_frames=60, t_wall_mm=None):
         line_s.set_data(years[:k + 1], peak_sandy[:k + 1])
         txt.set_text(f"ICS Week 11  |  Erosion-corrosion wall loss on elbow "
                      f"(CO2-corrosion-dominated)  |  t = {yr:.1f} yr")
-        prog[0].set_width(yr / years[-1])
+        for perf, m in perf_marks:
+            m.set_visible(yr >= perf)
         return im0, im1, line_c, line_s
 
     anim = animation.FuncAnimation(fig, update, frames=n_frames, blit=False)

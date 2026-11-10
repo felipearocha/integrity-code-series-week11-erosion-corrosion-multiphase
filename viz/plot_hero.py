@@ -78,7 +78,9 @@ def build():
                  va="bottom")
     ax0.plot(pc_circ, pa_ang, marker="x", color="cyan", ms=10, mew=2)
     ax0.annotate(f"global peak {pk:.1f} mm @ {pa_ang:.0f} deg (intrados inlet)",
-                 xy=(pc_circ, pa_ang), color="cyan", fontsize=8, va="top")
+                 xy=(pc_circ, pa_ang), xytext=(0, -9), textcoords="offset points",
+                 color="cyan", fontsize=8, ha="center", va="top",
+                 bbox=dict(boxstyle="round,pad=0.2", fc="black", ec="none", alpha=0.55))
     ax0.set_title("(a) Erosion-corrosion wall-loss field on 90 deg elbow",
                   fontsize=11, loc="left", fontweight="bold")
     _style(ax0)
