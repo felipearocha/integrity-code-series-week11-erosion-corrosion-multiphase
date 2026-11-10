@@ -34,7 +34,7 @@ operating parameters govern it?
 
 ## Key Result
 
-![Wall-loss field on the elbow](assets/hero_erosion_corrosion_week11.png)
+![Heatmap of 3-year wall loss over a 90 deg elbow (bend angle vs circumference) and extrados vs intrados loss profiles](assets/hero_erosion_corrosion_week11.png)
 
 The elbow wall-loss field uses a PRESCRIBED angular shear profile whose peak
 locations are fitted to the pattern reported by El-Gammal et al. 2010 / Kim et

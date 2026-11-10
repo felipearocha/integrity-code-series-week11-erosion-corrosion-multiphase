@@ -58,12 +58,12 @@ def flow_regime_map():
                        temp_c=60, p_total_bar=60, p_co2_bar=1.0, ph=5.5)
     fs = mpf.resolve_flow(op.q_l_m3s, op.q_g_m3s, D, watercut=0.6)
     ax.plot(fs.lambda_l, fs.froude, "o", color=P["dark_red"], ms=13, mec="white",
-            mew=1.5, zorder=5, label=f"operating point ({fs.regime})")
+            mew=1.5, zorder=5, label=f"operating point (u_m={u_m:.0f} m/s, {fs.regime})")
     ax.set_xlabel("No-slip liquid holdup C_L [-]", fontsize=10)
     ax.set_ylabel("Mixture Froude number Fr_m [-]", fontsize=10)
     ax.set_title("Beggs-Brill (1973) flow-regime map with operating point",
                  fontsize=11, loc="left", fontweight="bold")
-    ax.legend(frameon=False, fontsize=9)
+    ax.legend(frameon=True, framealpha=0.9, fontsize=9, loc="lower left")
     cbar = fig.colorbar(im, ax=ax, ticks=[0, 1, 2, 3])
     cbar.ax.set_yticklabels(["segregated", "transition", "intermittent", "distributed"])
     _style(ax)
@@ -102,6 +102,7 @@ def synergy_decomposition():
                  fontsize=11, loc="left", fontweight="bold")
     ax.legend(frameon=False, fontsize=8, loc="upper left")
     _style(ax)
+    ax.xaxis.set_minor_locator(plt.NullLocator())   # categorical axis
     out = os.path.join(_ASSETS, "synergy_decomposition.png")
     fig.savefig(out, dpi=300, bbox_inches="tight", facecolor="white"); plt.close(fig)
     return out
@@ -139,7 +140,7 @@ def sensitivity_tornado():
     colors = [P["navy"] if v == max(vals) else P["steel"] for v in vals]
     ax.barh(names, vals, color=colors)
     ax.set_xlabel("Surrogate feature importance [-]", fontsize=10)
-    ax.set_title("Sensitivity tornado (GBR surrogate over >12k MC runs)",
+    ax.set_title("Sensitivity tornado (GBR surrogate on 12,000 MC runs)",
                  fontsize=11, loc="left", fontweight="bold")
     _style(ax)
     out = os.path.join(_ASSETS, "sensitivity_tornado.png")
@@ -178,8 +179,9 @@ def kaeri_validation():
     kts = [C.NORSOK_KT[t] for t in temps]
     ax0.plot(temps, kts, "o-", color=P["navy"], lw=2, ms=7)
     ax0.axvline(60, color=P["dark_red"], lw=1, ls=":")
-    ax0.text(62, max(kts)*0.95, "Kt peak 60 C\n(FeCO3 protection)", fontsize=8,
-             color=P["dark_red"])
+    ax0.annotate("Kt peak 60 C\n(FeCO3 protection)", xy=(60, max(kts)),
+                 xytext=(66, 2.0), fontsize=8, color=P["dark_red"],
+                 arrowprops=dict(arrowstyle="->", color=P["dark_red"], lw=0.8))
     ax0.set_xlabel("Temperature [C]", fontsize=10)
     ax0.set_ylabel("NORSOK M-506:2017 constant Kt", fontsize=10)
     ax0.set_title("(a) NORSOK Kt vs temperature (Table 1, 2017)", fontsize=11,
@@ -201,7 +203,7 @@ def kaeri_validation():
                   loc="left", fontweight="bold")
     ax1.legend(frameon=False, fontsize=8)
     _style(ax1)
-    fig.text(0.99, 0.01, "Data: Kim et al. Nucl Eng Tech 53 (2021) 3003-3011 Table 2 (library copy)",
+    fig.text(0.99, -0.03, "Data: Kim et al. Nucl Eng Tech 53 (2021) 3003-3011 Table 2 (library copy)",
              ha="right", va="bottom", fontsize=7, color=P["steel"])
     out = os.path.join(_ASSETS, "kaeri_validation.png")
     fig.savefig(out, dpi=300, bbox_inches="tight", facecolor="white"); plt.close(fig)
