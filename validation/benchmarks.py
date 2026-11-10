@@ -86,9 +86,10 @@ def bench_dnv_straight():
 
 
 def bench_dnv_angle():
-    """DNV characteristic bend angle: alpha = atan(1/(2*sqrt(R/D)))."""
+    """DNV Eq.8.15 by hand: alpha = atan(1/sqrt(2*R/D)). At R/D=1.5 this is
+    atan(1/sqrt(3)) = 30 deg exactly."""
     r_over_d = 1.5
-    expected = math.degrees(math.atan(1.0 / (2.0 * math.sqrt(r_over_d))))
+    expected = 30.0
     actual = ero.characteristic_bend_angle(r_over_d)
     return check("DNV bend characteristic angle", expected, actual, 0.001)
 
@@ -156,7 +157,7 @@ def bench_dnv_bend_magnitude():
     NO extra sin in the numerator. m=1e-4 kg/s, U=15 m/s, D=0.1 m, R/D=1.5.
     """
     m_dot, u_p, d, rod = 1.0e-4, 15.0, 0.1, 1.5
-    alpha = math.radians(ero.characteristic_bend_angle(rod))
+    alpha = math.radians(30.0)  # Eq.8.15 by hand at R/D=1.5, independent of the code
     a_t = math.pi * d ** 2 / (4.0 * math.sin(alpha))
     fa = ero.f_alpha(math.degrees(alpha))
     expected = (C.DNV_K_STEEL * m_dot * u_p ** C.DNV_N_STEEL * fa) / (C.RHO_STEEL * a_t) \

@@ -26,6 +26,20 @@ def co2_fugacity(p_co2_bar: float, p_total_bar: float, t_k: float) -> float:
     return fugacity_coefficient(p_total_bar, t_k) * p_co2_bar
 
 
+def clamped_fugacity(p_co2_bar: float, p_total_bar: float, t_k: float) -> float:
+    """fCO2 held inside the NORSOK [0.1, 10] bar window, so an out-of-range value
+    is not silently extrapolated through the power law."""
+    f_co2 = co2_fugacity(p_co2_bar, p_total_bar, t_k)
+    return min(max(f_co2, C.NORSOK_FCO2_MIN), C.NORSOK_FCO2_MAX)
+
+
+def shear_exponent(f_co2: float) -> float:
+    """Exponent of (S/19) in the rate equation: 0.146 + 0.0324*log10(fCO2).
+    [SOURCE: NORSOK M-506:2017 Clause 5.2, Eqs.1-2]  T1
+    """
+    return C.NORSOK_S_EXP_A + C.NORSOK_S_EXP_B * math.log10(max(f_co2, 1e-9))
+
+
 def f_ph(t_c_node: int, ph: float) -> float:
     """pH factor f(pH)_t at a tabulated temperature node (Table 2, 2017).
     Evaluates the piecewise polynomial/exp segment for the given pH.
@@ -59,8 +73,7 @@ def _cr_at_node(t_node: int, f_co2: float, shear_pa: float, ph: float) -> float:
         exp_fco2 = C.NORSOK_FCO2_EXP_LOWT
     else:
         exp_fco2 = C.NORSOK_FCO2_EXP_STD
-    shear_exp = C.NORSOK_S_EXP_A + C.NORSOK_S_EXP_B * math.log10(max(f_co2, 1e-9))
-    shear_term = (max(shear_pa, 1e-9) / C.NORSOK_S_REF) ** shear_exp
+    shear_term = (max(shear_pa, 1e-9) / C.NORSOK_S_REF) ** shear_exponent(f_co2)
     return kt * f_co2 ** exp_fco2 * shear_term * fph
 
 
@@ -72,11 +85,7 @@ def corrosion_rate(t_c: float, p_co2_bar: float, p_total_bar: float,
     [SOURCE: NORSOK M-506:2017 Clause 5.2]  T1
     """
     t_k = C.c_to_k(t_c)
-    f_co2 = co2_fugacity(p_co2_bar, p_total_bar, t_k)
-    # Guard the NORSOK fugacity applicability window [0.1, 10] bar so an
-    # out-of-range fCO2 is not silently extrapolated through the power law
-    # (mirrors the temperature and pH clamping already applied).
-    f_co2 = min(max(f_co2, C.NORSOK_FCO2_MIN), C.NORSOK_FCO2_MAX)
+    f_co2 = clamped_fugacity(p_co2_bar, p_total_bar, t_k)
     temps = C.NORSOK_KT_TEMPS
 
     t_clamped = min(max(t_c, temps[0]), temps[-1])

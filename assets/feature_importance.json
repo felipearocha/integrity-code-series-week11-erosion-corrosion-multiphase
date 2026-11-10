@@ -1,15 +1,15 @@
 {
-  "q_l_m3s": 0.00022,
-  "q_g_m3s": 9e-05,
-  "diameter_m": 4e-05,
-  "temp_c": 0.31528,
-  "p_total_bar": 0.00166,
-  "p_co2_bar": 0.17581,
-  "ph": 0.38085,
-  "watercut": 4e-05,
-  "sand_ppmw": 0.00769,
-  "r_over_d": 0.00079,
-  "u_m": 0.00908,
-  "shear_pa": 0.1082,
-  "sherwood": 0.00024
+  "q_l_m3s": 0.00047,
+  "q_g_m3s": 5e-05,
+  "diameter_m": 3e-05,
+  "temp_c": 0.30398,
+  "p_total_bar": 0.00158,
+  "p_co2_bar": 0.17062,
+  "ph": 0.36796,
+  "watercut": 5e-05,
+  "sand_ppmw": 0.01162,
+  "r_over_d": 0.0008,
+  "u_m": 0.01303,
+  "shear_pa": 0.12955,
+  "sherwood": 0.00026
 }

@@ -12,12 +12,13 @@ from __future__ import annotations
 import math
 
 from . import constants as C
+from . import corrosion_norsok as cor
 from . import hydrodynamics as hyd
 from . import synergy_g119 as syn
 
 
 def wall_loss_field(s_mean: float, e0_bend: float, c0_protected: float,
-                    c0_bare: float, service_years: float,
+                    c0_bare: float, service_years: float, f_co2: float,
                     n_angle: int = 73, n_circ: int = 48):
     """Compute wall-loss [mm] over the elbow surface after `service_years`.
 
@@ -25,10 +26,12 @@ def wall_loss_field(s_mean: float, e0_bend: float, c0_protected: float,
         rows  = angular position around bend (0..90 deg), n_angle points
         cols  = circumferential position (0..360 deg), n_circ points
                 (0 = extrados/outer, 180 = intrados/inner)
+    f_co2 sets the NORSOK shear exponent used to scale corrosion locally.
     Returns (angles_deg, circ_deg, loss_mm 2D list).
     """
     angles, shear_ext, shear_int = hyd.elbow_angular_shear_profile(s_mean, n_angle)
     circ = [360.0 * j / (n_circ - 1) for j in range(n_circ)]
+    s_exp = cor.shear_exponent(f_co2)
 
     loss = []
     for i, a in enumerate(angles):
@@ -39,8 +42,9 @@ def wall_loss_field(s_mean: float, e0_bend: float, c0_protected: float,
             w_ext = 0.5 * (1.0 + math.cos(phi))   # 1 at 0 deg (extrados)
             w_int = 0.5 * (1.0 - math.cos(phi))   # 1 at 180 deg (intrados)
             s_local = w_ext * shear_ext[i] + w_int * shear_int[i]
-            # local corrosion scales with local/mean shear via NORSOK shear term
-            shear_scale = (s_local / s_mean) ** 0.3 if s_mean > 0 else 1.0
+            # local corrosion scales with local/mean shear via the NORSOK shear
+            # term (Eqs.1-2); the 5 C node has no shear term and is not special-cased
+            shear_scale = (s_local / s_mean) ** s_exp if s_mean > 0 else 1.0
             c0_loc = c0_protected * shear_scale
             cbare_loc = c0_bare * shear_scale
             # local erosion scales with local velocity; shear~v^2 so
